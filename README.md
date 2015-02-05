@@ -2,6 +2,11 @@
 Used to pull information from a shoutcast server's public presence and parse it for your own output.  
 Helpful if you wish to keep a record of songs played on a station, or for a webpage you are building.
 
+Based in parts on the following site(s):
+		http://forums.winamp.com/showthread.php?t=349710
+		http://wiki.winamp.com/wiki/SHOUTcast_DNAS_Server_2_XML_Reponses#General_Server_Summary
+		https://jonlabelle.com/snippets/view/php/convert-seconds-to-human-readable
+
 Demo in action:  http://www.zhivco.com/song.php
 
 
