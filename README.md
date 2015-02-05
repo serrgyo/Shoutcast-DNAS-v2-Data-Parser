@@ -52,6 +52,7 @@ This is used to parse the bit of information you can pull
 ShoutCAST DNAS v2 data parser by Thomas Kroll is licensed under a 
  
 Creative Commons Attribution-ShareAlike 4.0 International License
+( http://creativecommons.org/licenses/by-sa/4.0/ )
  
 Based on a work at http://www.zhivco.com/song.php.txt
 
