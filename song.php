@@ -115,7 +115,7 @@ $srv_url = urlencode($server);
 
 $sc_stats = simplexml_load_file($srv_url);
 
-/* special trickery goes here */
+/* output starts here */
 
 echo "<html><head><title>ShoutCAST stream info parser</title></head><body>";
 echo "<center><table border=0>";
@@ -125,9 +125,12 @@ echo "<tr><td align=\"right\">Listeners:</td><td>".$sc_stats->CURRENTLISTENERS."
 echo "<tr><td align=\"right\">Stream Uptime:</td><td>". secs_to_str($sc_stats->STREAMUPTIME) ."</td></tr>";
 echo "</table><br /><br />";
 
+/* end of useful output */
+
 // please leave this line in for copyright reasons as outlined above.  Thanks!
 echo "<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" href=\"http://purl.org/dc/dcmitype/Text\" property=\"dct:title\" rel=\"dct:type\">ShoutCAST DNAS v2 data parser</span> by <a xmlns:cc=\"http://creativecommons.org/ns#\" href=\"http://www.zhivco.com/\" property=\"cc:attributionName\" rel=\"cc:attributionURL\">Thomas Kroll</a> is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct=\"http://purl.org/dc/terms/\" href=\"http://www.zhivco.com/song.php.txt\" rel=\"dct:source\">http://www.zhivco.com/song.php.txt</a>";
 
+/* end of document */
 echo "</center></body></html>";
 
 
