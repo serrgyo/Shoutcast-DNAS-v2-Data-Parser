@@ -2,6 +2,8 @@
 Used to pull information from a shoutcast server's public presence and parse it for your own output.  
 Helpful if you wish to keep a record of songs played on a station, or for a webpage you are building.
 
+Demo in action:  http://www.zhivco.com/song.php
+
 
 This is used to parse the bit of information you can pull
 	from a shoutcast server.  The URL you use is
