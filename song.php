@@ -66,7 +66,7 @@
 
 */
 
-$derp = "Nope";  /*  serves no real purpose :D */
+$debug = true;
 
 /* --BEGIN: functions */
 
@@ -105,6 +105,38 @@ function secs_to_str ($duration)
     }
 }
 
+function remove_utf8_bom($text)
+{
+    $bom = pack('H*','EFBBBF');
+    $text = preg_replace("/^$bom/", '', $text);
+    return $text;
+}
+
+function iTunes_get($combine)
+{
+
+	$json = file_get_contents('https://itunes.apple.com/search?term='.$combine.'&entity=musicTrack&limit=1');
+	
+	$obj = remove_utf8_bom($json);
+		
+	$obj=preg_replace('/.+?({.+}).+/','$1',$obj);
+	
+	$obj=json_decode($obj,TRUE);
+	
+	return $obj;
+
+}
+
+function clean($in)
+{
+	// returns cleaned songtitle
+	
+	$in = preg_replace("/\([^)]+\)/","",$in);  //removed parenthesis
+	$in = preg_replace("/\[[^]]+\]/","",$in);  //removed brackets
+	
+	return(str_ireplace(' -','',$in));
+}
+
 /* --END: functions */
 
 /*  Get Artist - Song - Server Name */
@@ -115,23 +147,47 @@ $srv_url = urlencode($server);
 
 $sc_stats = simplexml_load_file($srv_url);
 
-/* output starts here */
+/* gets other information about current track here */
+
+$album = iTunes_get(urlencode(clean($sc_stats->SONGTITLE)));
+
+extract($album);
+
+
+
+/* special trickery goes here */
 
 echo "<html><head><title>ShoutCAST stream info parser</title></head><body>";
 echo "<center><table border=0>";
 echo "<tr><td align=\"right\">Station:</td><td><a href=\"".$sc_stats->SERVERURL."\">".$sc_stats->SERVERTITLE."</a></td></tr>";
-echo "<tr><td align=\"right\">Currently Playing:</td><td>".$sc_stats->SONGTITLE."</td></tr>";
+
+echo "<tr><td align=\"right\">Currently Playing:</td><td><table border=\"1\" padding=\"1\"><tr><td><img src=\"".$album['results'][0]['artworkUrl100']."\" /></td><td>".$sc_stats->SONGTITLE."<br />".$album['results'][0]['collectionName']."<br />".date("Y",strtotime($album['results'][0]['releaseDate']))."</table></td></tr>";
+
 echo "<tr><td align=\"right\">Listeners:</td><td>".$sc_stats->CURRENTLISTENERS." of ".$sc_stats->MAXLISTENERS." [Peak: ".$sc_stats->PEAKLISTENERS."]</td></tr>";
 echo "<tr><td align=\"right\">Stream Uptime:</td><td>". secs_to_str($sc_stats->STREAMUPTIME) ."</td></tr>";
 echo "</table><br /><br />";
 
-/* end of useful output */
-
 // please leave this line in for copyright reasons as outlined above.  Thanks!
 echo "<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-sa/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" href=\"http://purl.org/dc/dcmitype/Text\" property=\"dct:title\" rel=\"dct:type\">ShoutCAST DNAS v2 data parser</span> by <a xmlns:cc=\"http://creativecommons.org/ns#\" href=\"http://www.zhivco.com/\" property=\"cc:attributionName\" rel=\"cc:attributionURL\">Thomas Kroll</a> is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct=\"http://purl.org/dc/terms/\" href=\"http://www.zhivco.com/song.php.txt\" rel=\"dct:source\">http://www.zhivco.com/song.php.txt</a>";
 
-/* end of document */
-echo "</center></body></html>";
+echo "</center>";
+
+if($debug)
+{
+	echo "<hr><br /><br />Debug Output:<br/>";
+	 
+	echo "Cleaned Title: ".clean($sc_stats->SONGTITLE)."<br />";
+	
+	echo "Censored Title: ".$trackCensoredName."<br />";
+	
+	echo "<br /><br /><b>Album Variable</b>:&nbsp;";
+	print_r($album);
+	
+	echo "Country: ".$album['results'][0]['country'];
+	echo "<br /><hr>";
+}
+
+echo "</body></html>";
 
 
 
